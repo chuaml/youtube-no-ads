@@ -18,6 +18,10 @@
                 text-shadow: 0 0 0 1px;
             }
 
+            a{
+                color: yellow;
+                font-size: 1.5rem;
+            }
         }
 
         #video-container {
@@ -83,6 +87,11 @@
 
             const videoContainer = document.getElementById('video-container');
             for (const path of videoLinkPaths) {
+                const a = document.createElement('a');
+                a.setAttribute('href', `https://yout-ube.com/watch?v=${path}`);
+                a.textContent = `https://yout-ube.com/watch?v=${path}`;
+                videoContainer.appendChild(a);
+
                 const iframe = document.createElement('iframe');
                 iframe.setAttribute('referrerpolicy', 'no-referrer');
                 iframe.setAttribute('allow', 'autoplay');
