@@ -21,6 +21,8 @@
             a {
                 color: yellow;
                 font-size: 1.5rem;
+                display: block;
+                margin: 2rem;
             }
         }
 
@@ -30,10 +32,10 @@
         }
 
         iframe {
-            width: 80vw;
+            width: 90vw;
             height: auto;
             aspect-ratio: 16/9;
-            margin-top: 5rem;
+            margin-bottom: 5rem;
         }
 
         textarea {
@@ -105,7 +107,7 @@
                 const links = e.target.value.trim().split("\n");
                 loadVideo(links);
                 setTimeout(_ => {
-                    document.getElementById('video-container').scrollIntoView();
+                    document.querySelector('#video-container > iframe').scrollIntoView();
                     if (e.target.value.trim() !== '') {
                         localStorage['txtVideoUrls'] = e.target.value.trim();
                     }
