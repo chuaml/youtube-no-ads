@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube No Ads</title>
+    <style>
+        :root {
+            font-size: 16px;
+            line-height: 1.5;
+            background-color: #eee;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                background-color: #444;
+                text-shadow: 0 0 0 1px;
+            }
+
+        }
+
+        #video-container {
+            border: 1px solid #aaa;
+            min-height: 50vh;
+        }
+
+        iframe {
+            width: 80vw;
+            height: auto;
+            aspect-ratio: 16/9;
+            margin-top: 5rem;
+        }
+
+        textarea {
+            font-size: 1rem;
+            line-height: 1.5;
+            width: 95vw;
+            height: 10rem;
+        }
+
+        #slUrls {
+            width: 95vw;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <textarea id="txtVideoUrls" spellcheck="false" autofocus></textarea>
+    <div id="video-container"></div>
+    <!-- <iframe src="" allow="autoplay" frameborder="0"></iframe> -->
+    <script>
+        const txtVideoUrls = document.getElementById('txtVideoUrls');
+        if (localStorage['txtVideoUrls']) {
+            txtVideoUrls.value = localStorage['txtVideoUrls'];
+            loadVideo(txtVideoUrls.value.split("\n"));
+        }
+
+
+        /** @param {string[]} links */
+        function loadVideo(links) {
+            const videoLinkPaths = [];
+            for (const link of links) {
+                if (!link) continue;
+                if (link.startsWith('https://') === false) continue;
+                try {
+                    const url = new URL(link);
+                    if (link.startsWith('https://www.youtube.com/watch?v=')) { // normal link
+                        videoLinkPaths.push(url.searchParams.get('v'));
+                    }
+                    else if (link.startsWith('https://youtu.be/')) { // from share button link
+                        videoLinkPaths.push(url.pathname.substring(1));
+                    }
+                    else {
+                        console.warn('unknown url type');
+                    }
+                } catch (err) {
+                    console.warn(err);
+                }
+            }
+            console.log({ videoLinkPaths });
+
+            const videoContainer = document.getElementById('video-container');
+            for (const path of videoLinkPaths) {
+                const iframe = document.createElement('iframe');
+                iframe.setAttribute('referrerpolicy', 'no-referrer');
+                iframe.setAttribute('allow', 'autoplay');
+                iframe.setAttribute('src', `https://yout-ube.com/watch?v=${path}`);
+                videoContainer.appendChild(iframe);
+            }
+        }
+        txtVideoUrls.addEventListener('input', function (e) {
+            setTimeout(_ => {
+                const links = e.target.value.trim().split("\n");
+                loadVideo(links);
+                setTimeout(_ => {
+                    document.getElementById('video-container').scrollIntoView();
+                    if (e.target.value.trim() !== '') {
+                        localStorage['txtVideoUrls'] = e.target.value.trim();
+                    }
+                }, 0);
+            }, 0);
+        });
+    </script>
+</body>
+
+</html>
