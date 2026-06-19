@@ -3,7 +3,7 @@
     "short_name": "youtube no ads",
     "description": "An example of youtube no ads",
     "theme_color": "#e4c7f8",
-    "start_url": "./",
+    "start_url": "/",
     "display": "fullscreen",
     "icons": [
         {
