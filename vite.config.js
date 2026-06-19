@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { cloudflare } from "@cloudflare/vite-plugin";
 export default defineConfig({
     base: './',
     // use `mpa` to return 404 on non-existing page, url, resources
@@ -11,5 +12,5 @@ export default defineConfig({
     esbuild: {
         drop: ['console', 'debugger']
     },
-    plugins: [],  // at least an empty slot for cloudflare-pages to detect
+    plugins: [cloudflare()],  // at least an empty slot for cloudflare-pages to detect
 });
