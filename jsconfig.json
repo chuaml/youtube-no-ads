@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "es2022",
+        "target": "es2024",
+        "moduleResolution": "bundler",
+        "paths": {
+            "/src/*": [
+                "./src/*"
+            ],
+            "@/*": [
+                "./src/*"
+            ]
+        },
+    },
+    "include": [
+        "./src/**/*.js",
+        "./src/**/*.mjs"
+    ],
+    "exclude": [
+        "./node_modules",
+        "./node_modules/*"
+    ],
+}
