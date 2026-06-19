@@ -16,8 +16,8 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    ({ request }) => request.destination === 'document' && url.searchParams.has('nocache') === false, // catches HTML pages
-    new StaleWhileRevalidate({
+    ({ request, url }) => request.destination === 'document' && url.searchParams.has('nocache') === false, // catches HTML pages
+    new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'html-cache',
     })
 );
