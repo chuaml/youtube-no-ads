@@ -4,6 +4,16 @@ A lightweight, ad-free Progressive Web App (PWA) client for YouTube. It allows y
 
 ---
 
+## Cloudflare worker
+
+To test it locally:
+
+```bash
+npx wrangler pages dev
+```
+
+---
+
 ## 🌐 Live Demo
 Visit the live application hosted on Cloudflare Pages:
 👉 **[youtube-no-ads.chuaml.workers.dev](https://youtube-no-ads.chuaml.workers.dev/)**
