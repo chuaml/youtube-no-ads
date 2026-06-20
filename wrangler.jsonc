@@ -2,13 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "youtube-no-ads",
   "pages_build_output_dir": "./dist",
-  "assets": {
-    "directory": "./dist"
-  },
   "compatibility_date": "2026-06-19",
-  "vars": {
-    "NODE_VERSION": "24.13"
-  },
   "observability": {
     "enabled": true
   },
