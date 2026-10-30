@@ -5,11 +5,14 @@
 
 ## otherwise just use a pre-built image template for dev-container and dev-only purpose
 
-
 # this is for production, lack basic tools, not suitable for development-only purpose
 # FROM node:24.13-alpine  
-FROM mcr.microsoft.com/devcontainers/javascript-node:24  # pre-built image for dev-only purpose
 
+# pre-built image for dev-only purpose
+FROM mcr.microsoft.com/devcontainers/javascript-node:24  
+
+## agentic coding
+RUN curl -fsSL https://antigravity.google/cli/install.sh | bash
 
 # Set the working directory inside the container
 WORKDIR /app

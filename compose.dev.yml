@@ -6,7 +6,8 @@ services:
   ##  then open with vscode command `Dev Containers: Open Folder in Container`
   ##       or `Dev Containers: Rebuild and Reopen in Container`
   dev-container: ## for vscode dev container extension `ms-vscode-remote.remote-containers`
-    image: mcr.microsoft.com/devcontainers/javascript-node:24  # pre-built image for dev-only purpose
+    # image: mcr.microsoft.com/devcontainers/javascript-node:24  # pre-built image for dev-only purpose
+    build: .
     working_dir: /app/
     ports:
       - "4173:4173"
