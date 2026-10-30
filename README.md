@@ -4,26 +4,33 @@ A lightweight, ad-free Progressive Web App (PWA) client for YouTube. It allows y
 
 ---
 
-## Deployment | Cloudflare Pages
+## 🚀 Deployment | Cloudflare Pages
 
-To test it locally:
+This project is deployed to **Cloudflare Pages** under the project name `youtube-no-ads`.
+
+### 1. Test Locally with Cloudflare Runtime
 ```bash
 npx wrangler pages dev
 ```
 
-To deploy to Cloudflare Pages (Cloudflare "Pages", NOT "Workers"):
+### 2. Deploy via CLI
+Ensure you have set your Cloudflare API Token:
 ```bash
-export CLOUDFLARE_API_TOKEN="API_TOKEN"  ## login via token (if from dev-container)
-npm run build && npx wrangler pages deploy dist/
+export CLOUDFLARE_API_TOKEN="your_token_here"
+npm run deploy
 ```
-Note: create API_TOKEN from Cloudflare account | ( Manage account -> Account API tokens )
+*(Runs `npm run build` and deploys `./dist` to Cloudflare Pages)*
 
+### 3. Continuous Deployment (Git)
+Pushing to the `main` branch automatically triggers Cloudflare Pages to build and deploy.
+
+📖 For complete deployment instructions, API token permissions, and rollbacks, see the [Deployment Guide](DEPLOYMENT.md).
 
 ---
 
 ## 🌐 Live Demo
 Visit the live application hosted on Cloudflare Pages:
-👉 https://youtube-no-ads.pages.dev/
+👉 **https://youtube-no-ads.pages.dev/**
 
 ---
 
