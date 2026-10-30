@@ -59,11 +59,11 @@ flowchart TD
 
 ## 4. Phased Execution Plan & Detailed Specifications
 
-### Phase 1: Robust URL Parser & Unit Test Suite (Priority: P0)
+### Phase 1: Robust URL Parser & Unit Test Suite (Priority: P0) - COMPLETED
 **Goal:** Guarantee 100% reliable URL extraction across all YouTube link formats and pass `npm run test`.
 
 1. **`src/url-parser.js` Specification**:
-   - `extractVideoId(input: string): { id: string, timestamp: string | null } | null`:
+   - [x] `extractVideoId(input: string)`:
      - Clean input: strip whitespace, handle protocols (`http://`, `https://`, scheme-relative `//`).
      - Standard Watch: `youtube.com/watch` -> extract `v` search parameter regardless of parameter ordering.
      - Mobile / Music / Subdomains: `m.youtube.com`, `music.youtube.com`.
@@ -73,64 +73,91 @@ flowchart TD
      - YouTube Embeds: `youtube.com/embed/{id}`.
      - Raw Video ID: Exactly 11 characters matching `/^[a-zA-Z0-9_-]{11}$/`.
      - Timestamp normalization: extract `t` or `start` query parameter (e.g. `?t=1m30s` or `?t=90`) and pass to mirror.
-   - `parseInputLines(rawText: string): ParsedVideo[]`:
+   - [x] `parseInputLines(rawText: string)`:
      - Splits lines, filters empty lines, validates IDs, and provides clean metadata.
-   - `buildMirrorUrl(id: string, timestamp: string | null): string`:
+   - [x] `buildMirrorUrl(id: string, timestamp: string | null)`:
      - Returns `https://yout-ube.com/watch?v=${id}${timestamp ? `&t=${timestamp}` : ''}`.
 2. **`src/url-parser.test.js` Test Suite**:
-   - Comprehensive test cases for 15+ URL permutations, timestamp formats, malformed links, and raw IDs.
-   - Verify `npm run test` passes with 100% green tests.
+   - [x] Comprehensive test cases for 15+ URL permutations, timestamp formats, malformed links, and raw IDs.
+   - [x] Verify `npm run test` passes with 100% green tests.
 
 ---
 
-### Phase 2: Feed DOM Reconciliation & State Preservation (Priority: P1)
+### Phase 2: Feed DOM Reconciliation & State Preservation (Priority: P1) - COMPLETED
 **Goal:** Ensure adding, reordering, or removing links preserves currently playing video iframes while maintaining intended auto-scroll.
 
 1. **Keyed DOM Reconciler (`src/feed-reconciler.js`)**:
-   - Maintain an internal card map keyed by video ID: `Map<string, HTMLElement>`.
-   - On parsed links update:
+   - [x] Maintain an internal card map keyed by video ID: `Map<string, HTMLElement>`.
+   - [x] On parsed links update:
      - Keep existing iframe cards untouched so playback is never interrupted.
      - Append newly added video cards.
      - Remove obsolete cards when their links are removed.
      - Reorder cards to match input sequence.
 2. **User Flow & Intentional Behaviors Preserved**:
-   - Preserve **Auto-Scroll**: Trigger smooth scroll to the active player feed when videos load or update.
-   - Preserve **Autofocus & Select**: Maintain automatic focus and text selection on textarea focus for instant overwrite.
-   - Standard eager iframe loading (no `loading="lazy"`).
+   - [x] Preserve **Auto-Scroll**: Trigger smooth scroll to the active player feed when videos load or update.
+   - [x] Preserve **Autofocus & Select**: Maintain automatic focus and text selection on textarea focus for instant overwrite.
+   - [x] Standard eager iframe loading (no `loading="lazy"`).
 3. **Safe Storage Synchronization (`src/storage.js`)**:
-   - When the user clears all text, properly call `localStorage.removeItem('txtVideoUrls')` to prevent erased links from reviving on reload.
+   - [x] When the user clears all text, properly call `localStorage.removeItem('txtVideoUrls')` to prevent erased links from reviving on reload.
 
 ---
 
-### Phase 3: UX Actions & Video Card Controls (Priority: P1)
+### Phase 3: UX Actions & Video Card Controls (Priority: P1) - COMPLETED
 **Goal:** Deliver modern usability tools for managing the video feed.
 
 1. **Quick Action Toolbar**:
-   - **Paste from Clipboard**: Uses `navigator.clipboard.readText()`, populates textarea, and loads videos immediately.
-   - **Clear All**: Clears feed and removes storage.
-   - **Load Sample**: Pre-populates demo videos for quick testing.
-   - **Status Badge**: Shows count of loaded videos and notices for skipped invalid lines.
+   - [x] **Paste from Clipboard**: Uses `navigator.clipboard.readText()`, populates textarea, and loads videos immediately.
+   - [x] **Clear All**: Clears feed and removes storage.
+   - [x] **Load Sample**: Pre-populates demo videos for quick testing.
+   - [x] **Status Badge**: Shows count of loaded videos and notices for skipped invalid lines.
 2. **Individual Video Card Controls**:
-   - **Remove (✕)**: Removes that specific video card and updates textarea + storage.
-   - **Copy Mirror Link**: Copies clean `https://yout-ube.com/watch?v=...` link to clipboard with *"Copied!"* feedback.
-   - **Open in New Tab**: Direct external link button.
+   - [x] **Remove (✕)**: Removes that specific video card and updates textarea + storage.
+   - [x] **Copy Mirror Link**: Copies clean `https://yout-ube.com/watch?v=...` link to clipboard with *"Copied!"* feedback.
+   - [x] **Open in New Tab**: Direct external link button.
 3. **Empty State & Accessibility**:
-   - Friendly guide when textarea is empty explaining supported formats.
-   - Proper `aria-label` attributes on buttons.
+   - [x] Friendly guide when textarea is empty explaining supported formats.
+   - [x] Proper `aria-label` attributes on buttons.
 
 ---
 
-### Phase 4: Code Modularization & Housekeeping (Priority: P2)
+### Phase 4: Code Modularization & Housekeeping (Priority: P2) - COMPLETED
 **Goal:** Clean separation of concerns, build optimization, and metadata alignment.
 
 1. **Migrate Inline JS to `src/main.js`**:
-   - Move all runtime JavaScript out of `index.html` into `src/main.js` and ES modules.
-   - Allows Vite's esbuild optimizer to drop `console.*` statements in production builds as intended in `vite.config.js`.
+   - [x] Move all runtime JavaScript out of `index.html` into `src/main.js` and ES modules.
+   - [x] Allows Vite's esbuild optimizer to drop `console.*` statements in production builds as intended in `vite.config.js`.
 2. **Theme Mode Support**:
-   - Support manual toggle (Auto / Dark / Light) stored in `localStorage`, maintaining default fallback to `prefers-color-scheme`.
+   - [x] Support manual toggle (Auto / Dark / Light) stored in `localStorage`, maintaining default fallback to `prefers-color-scheme`.
 3. **Package & Deployment Synchronization**:
-   - Update `package.json` name from `youtube-no-app` to `youtube-no-ads` to match `wrangler.jsonc` and live deployment.
-   - Ensure `npm run lint`, `npm run test`, and `npm run build` all pass cleanly with zero warnings/errors.
+   - [x] Update `package.json` name from `youtube-no-app` to `youtube-no-ads` to match `wrangler.jsonc` and live deployment.
+   - [x] Ensure `npm run lint`, `npm run test`, and `npm run build` all pass cleanly with zero warnings/errors.
+
+---
+
+### Phase 5: Web Share Target & PWA Installation (Priority: P1) - COMPLETED
+**Goal:** Enable PWA installability and make YouTube No-Ads appear in the native system share sheet as a share target, populating shared links directly into the textarea.
+
+1. **Web App Manifest (`public/manifest.json`)**:
+   - [x] Defined installable PWA configuration with 192px/512px maskable icons, screenshots, and metadata.
+   - [x] Configured `share_target`:
+     ```json
+     "share_target": {
+       "action": "./",
+       "method": "GET",
+       "params": {
+         "title": "title",
+         "text": "text",
+         "url": "url"
+       }
+     }
+     ```
+2. **Web Share Target Ingestion (`src/main.js` & `src/url-parser.js`)**:
+   - [x] Added `extractShareTargetLink()` supporting direct `url` parameters, embedded URLs inside `text` strings, and raw video IDs.
+   - [x] Appends incoming shared links to textarea, updates player feed, and syncs `localStorage`.
+   - [x] Calls `window.history.replaceState()` to clean URL query parameters and prevent duplicate additions on page refresh.
+   - [x] Registered Service Worker (`public/sw.js`) in `src/main.js`.
+3. **Automated Vitest Verification**:
+   - [x] Tested 5 distinct share target permutations in `src/url-parser.test.js`. All 20 tests pass.
 
 ---
 

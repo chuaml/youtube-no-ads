@@ -1,9 +1,9 @@
 {
-  "name": "youtube-no-app",
+  "name": "youtube-no-ads",
   "private": true,
   "version": "0.0.2",
   "type": "module",
-  "description": "youtube-no-app",
+  "description": "youtube-no-ads",
   "main": "main.js",
   "scripts": {
     "dev": "vite",

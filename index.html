@@ -5,12 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube No Ads</title>
+    <meta name="description" content="Watch YouTube videos ad-free in a lightweight responsive feed client.">
+    <meta property="og:title" content="YouTube No Ads">
+    <meta property="og:description" content="Watch YouTube videos ad-free in a lightweight responsive feed client.">
+    <meta name="theme-color" content="#a78bfa" />
     <link rel="icon" type="image/svg+xml" href="./javascript.svg" />
-    <!--  // disabled PWA, to allow mobile page play video in background -->
-    <!-- <link rel="manifest" href="./manifest.json" /> -->
-    <script type="module" src="src/main.js" async></script>
+    <link rel="apple-touch-icon" href="./icons/manifest-icon-192.maskable.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <script type="module" src="./src/main.js"></script>
     <style>
-
         :root {
             --bg-color: #0b0f19;
             --card-bg: rgba(17, 24, 39, 0.75);
@@ -21,12 +24,14 @@
             --accent-gradient: linear-gradient(135deg, #a78bfa 0%, #818cf8 100%);
             --shadow-color: rgba(0, 0, 0, 0.4);
             --textarea-bg: rgba(17, 24, 39, 0.9);
+            --btn-bg: rgba(255, 255, 255, 0.06);
+            --btn-hover: rgba(255, 255, 255, 0.12);
             font-size: 16px;
             line-height: 1.5;
         }
 
         @media (prefers-color-scheme: light) {
-            :root {
+            :root:not([data-theme="dark"]) {
                 --bg-color: #f3f4f6;
                 --card-bg: rgba(255, 255, 255, 0.85);
                 --border-color: rgba(0, 0, 0, 0.08);
@@ -36,7 +41,37 @@
                 --accent-gradient: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
                 --shadow-color: rgba(0, 0, 0, 0.08);
                 --textarea-bg: rgba(255, 255, 255, 0.95);
+                --btn-bg: rgba(0, 0, 0, 0.05);
+                --btn-hover: rgba(0, 0, 0, 0.1);
             }
+        }
+
+        :root[data-theme="light"] {
+            --bg-color: #f3f4f6;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-color: #1f2937;
+            --text-muted: #4b5563;
+            --accent-color: #6d28d9;
+            --accent-gradient: linear-gradient(135deg, #6d28d9 0%, #4f46e5 100%);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --textarea-bg: rgba(255, 255, 255, 0.95);
+            --btn-bg: rgba(0, 0, 0, 0.05);
+            --btn-hover: rgba(0, 0, 0, 0.1);
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-color: #a78bfa;
+            --accent-gradient: linear-gradient(135deg, #a78bfa 0%, #818cf8 100%);
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --textarea-bg: rgba(17, 24, 39, 0.9);
+            --btn-bg: rgba(255, 255, 255, 0.06);
+            --btn-hover: rgba(255, 255, 255, 0.12);
         }
 
         * {
@@ -48,7 +83,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -61,12 +96,21 @@
             max-width: 900px;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .app-header {
             text-align: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            position: relative;
         }
 
         .app-title {
@@ -75,15 +119,75 @@
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
             letter-spacing: -0.025em;
+        }
+
+        .theme-toggle-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            color: var(--text-color);
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--btn-hover);
+            transform: scale(1.05);
         }
 
         .app-subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
             max-width: 550px;
-            margin: 0 auto;
+            margin: 0.5rem auto 0;
+        }
+
+        .app-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-tool {
+            background-color: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.45rem 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-tool:hover {
+            background-color: var(--btn-hover);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        .feed-status {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         textarea {
@@ -135,6 +239,14 @@
             box-shadow: 0 20px 25px -5px var(--shadow-color), 0 10px 10px -5px var(--shadow-color);
         }
 
+        .video-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
         .video-link {
             color: var(--accent-color);
             font-size: 0.9rem;
@@ -143,14 +255,49 @@
             word-break: break-all;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            align-self: flex-start;
+            gap: 0.45rem;
             transition: opacity 0.2s ease;
         }
 
         .video-link:hover {
             text-decoration: underline;
             opacity: 0.9;
+        }
+
+        .video-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .card-btn {
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 6px;
+            padding: 0.35rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+            text-decoration: none;
+        }
+
+        .card-btn:hover {
+            background: var(--btn-hover);
+            color: var(--text-color);
+            transform: translateY(-1px);
+        }
+
+        .card-btn.copied {
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .card-btn-remove:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.4);
         }
 
         .iframe-wrapper {
@@ -171,103 +318,98 @@
             height: 100%;
             border: 0;
         }
+
+        .empty-state-card {
+            background-color: var(--card-bg);
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .empty-state-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .empty-state-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 480px;
+        }
+
+        .empty-state-examples {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            background: var(--btn-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-top: 0.25rem;
+        }
+
+        .btn-action.btn-sample {
+            margin-top: 0.5rem;
+            background: var(--accent-gradient);
+            color: #ffffff;
+            border: 0;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+
+        .btn-action.btn-sample:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 
 <body>
     <div class="app-container">
         <header class="app-header">
-            <h1 class="app-title">YouTube No Ads</h1>
+            <div class="header-top">
+                <h1 class="app-title">YouTube No Ads</h1>
+                <button id="btnThemeToggle" class="theme-toggle-btn" title="Toggle theme (Auto / Dark / Light)" aria-label="Toggle theme">
+                    <span id="themeIcon">🌓</span>
+                </button>
+            </div>
             <p class="app-subtitle">Paste one or more YouTube watch URLs or share links below (one per line) to load them in an ad-free player feed.</p>
         </header>
+
+        <div class="app-toolbar">
+            <div class="toolbar-actions">
+                <button id="btnPaste" class="btn-tool" title="Paste from clipboard">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                    Paste
+                </button>
+                <button id="btnClear" class="btn-tool" title="Clear all links">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
+                    Clear
+                </button>
+                <button id="btnSample" class="btn-tool" title="Load sample demo videos">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/></svg>
+                    Sample
+                </button>
+            </div>
+            <div id="feedStatus" class="feed-status" aria-live="polite"></div>
+        </div>
 
         <textarea id="txtVideoUrls" placeholder="Paste YouTube links here...&#10;e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ" spellcheck="false" autofocus></textarea>
         
         <div id="video-container"></div>
     </div>
-
-    <script>
-        const txtVideoUrls = document.getElementById('txtVideoUrls');
-        txtVideoUrls.addEventListener('focus', (e) => { e.target.select(); });
-        if (localStorage['txtVideoUrls']) {
-            txtVideoUrls.value = localStorage['txtVideoUrls'];
-            loadVideo(txtVideoUrls.value.split("\n"));
-        }
-
-
-        /** @param {string[]} links */
-        function loadVideo(links) {
-            const videoLinkPaths = [];
-            for (const link of links) {
-                if (!link) continue;
-                if (link.startsWith('https://') === false) continue;
-                try {
-                    const url = new URL(link);
-                    if (link.startsWith('https://www.youtube.com/watch?v=')) { // normal link
-                        videoLinkPaths.push(url.searchParams.get('v'));
-                    }
-                    else if (link.startsWith('https://youtu.be/')) { // from share button link
-                        videoLinkPaths.push(url.pathname.substring(1));
-                    }
-                    else {
-                        console.warn('unknown url type');
-                    }
-                } catch (err) {
-                    console.warn(err);
-                }
-            }
-            console.log({ videoLinkPaths });
-
-            const videoContainer = document.getElementById('video-container');
-            videoContainer.innerHTML = ''; // Clear container to avoid duplicate streams on text input updates
-
-            for (const path of videoLinkPaths) {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-
-                const a = document.createElement('a');
-                a.className = 'video-link';
-                a.setAttribute('href', `https://yout-ube.com/watch?v=${path}`);
-                a.setAttribute('target', '_blank');
-                a.innerHTML = `
-                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="display:inline-block;vertical-align:middle;margin-top:-2px;">
-                        <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
-                        <path d="M6.586 10.172A3 3 0 0 0 10.4 10.5l.586-.586a1 1 0 0 0 .199-.154 2 2 0 0 1-3.337-.861l.792-.793a2 2 0 1 1 2.83 2.83l-1.06 1.06a2 2 0 0 1-2.83 0 1.978 1.978 0 0 0-.172-.172z"/>
-                    </svg> yout-ube.com/watch?v=${path}
-                `;
-                card.appendChild(a);
-
-                const iframeWrapper = document.createElement('div');
-                iframeWrapper.className = 'iframe-wrapper';
-
-                const iframe = document.createElement('iframe');
-                iframe.setAttribute('referrerpolicy', 'no-referrer');
-                iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-                iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('src', `https://yout-ube.com/watch?v=${path}`);
-                
-                iframeWrapper.appendChild(iframe);
-                card.appendChild(iframeWrapper);
-                videoContainer.appendChild(card);
-            }
-        }
-        
-        txtVideoUrls.addEventListener('input', function (e) {
-            setTimeout(_ => {
-                const links = e.target.value.trim().split("\n");
-                loadVideo(links);
-                setTimeout(_ => {
-                    const firstIframe = document.querySelector('#video-container iframe');
-                    if (firstIframe) {
-                        firstIframe.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                    if (e.target.value.trim() !== '') {
-                        localStorage['txtVideoUrls'] = e.target.value.trim();
-                    }
-                }, 0);
-            }, 0);
-        });
-    </script>
 </body>
 
 </html>
