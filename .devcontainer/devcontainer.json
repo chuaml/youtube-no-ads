@@ -21,7 +21,7 @@
         }
     },
     "postCreateCommand": "pwd && ls && npm -v && whoami",
-    "postStartCommand": "pwd && whoami"
+    "postStartCommand": "pwd && whoami",
     //
     // "features": {
     // 	// // increase huge xxx MB for addon tools --that are not come with original image-- in dev container
@@ -31,7 +31,9 @@
     // },
     //
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // "forwardPorts": [],
+    "forwardPorts": [
+        8976   // for  wrangler login
+    ]
     // Uncomment the next line if you want start specific services in your Docker Compose config.
     // "runServices": [],
     // Uncomment the next line if you want to keep your containers running after VS Code shuts down.

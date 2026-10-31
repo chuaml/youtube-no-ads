@@ -66,19 +66,10 @@ The updated version is deployed to [https://youtube-no-ads.pages.dev/](https://y
 
 You can deploy directly from your local terminal or dev container using [Wrangler](https://developers.cloudflare.com/workers/wrangler/):
 
-#### 1. Configure Cloudflare API Token
-Generate an API token from your [Cloudflare Dashboard](https://dash.cloudflare.com/profile/api-tokens):
-- Go to **My Profile** > **API Tokens**.
-- Click **Create Token** > use the **Cloudflare Pages** template (or grant `Account.Cloudflare Pages: Edit`).
-- Export the token into your shell environment:
-
+#### 1. Login via web browser
+when deploying from within a container, ensure `callback-host` and `callback-port` are set for browser from host-machine connect to dev-container
 ```bash
-export CLOUDFLARE_API_TOKEN="your_cloudflare_api_token_here"
-```
-
-*(Optional)* If you have access to multiple accounts, specify your Account ID:
-```bash
-export CLOUDFLARE_ACCOUNT_ID="your_account_id_here"
+npx wrangler login --callback-host 0.0.0.0 --callback-port 8976
 ```
 
 #### 2. Run Single Deploy Command
@@ -91,6 +82,11 @@ npm run deploy
 This runs `vite build` followed by `wrangler pages deploy dist/`.
 
 #### Alternatively: Direct Wrangler CLI command
+you must login first, ensure `callback-host` and port are set for browser from host-machine connect to dev-container
+```bash
+npx wrangler login --callback-host 0.0.0.0 --callback-port 8976
+```
+
 ```bash
 npx wrangler pages deploy dist/ --project-name youtube-no-ads
 ```

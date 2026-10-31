@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "build-n-preview": "vite build && vite preview",
-    "deploy": "npm run build && wrangler pages deploy",
+    "deploy": "npm run build && npx wrangler login --callback-host 0.0.0.0 --callback-port 8976 && wrangler pages deploy ./dist",
     "lint": "eslint .",
     "test": "vitest"
   },
